@@ -1,0 +1,4 @@
+FROM redis
+COPY redis.conf /usr/local/etc/redis/redis.conf
+HEALTHCHECK --interval=2m --timeout=3s CMD redis-cli PING || exit 1
+CMD [ "redis-server", "/usr/local/etc/redis/redis.conf" ]

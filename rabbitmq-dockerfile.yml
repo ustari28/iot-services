@@ -1,0 +1,4 @@
+FROM rabbitmq:3.8-management
+ADD enabled_plugins /etc/rabbitmq/
+HEALTHCHECK --interval=2m --timeout=3s CMD rabbitmq-diagnostics -q ping || exit 1
+EXPOSE 15672 5672 1883

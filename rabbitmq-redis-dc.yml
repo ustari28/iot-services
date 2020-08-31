@@ -1,0 +1,65 @@
+version: '3.8'
+services:
+  rabbitmq:
+    build:
+      context: .
+      dockerfile: rabbitmq-dockerfile.yml
+    ports:
+    - "15672:15672"
+    - "5672:5672"
+    - "1883:1883"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping || exit 1
+      interval: 1m
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    networks:
+      - iot
+  redis-master:
+    build:
+      context: .
+      dockerfile: redis-dockerfile.yml
+    healthcheck:
+      test: redis-cli PING || exit 1
+      interval: 1m
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    ports:
+    - "6379:6379"
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+    networks:
+      - iot
+  redis-slave-1:
+    build:
+      context: .
+      dockerfile: redis-dockerfile.yml
+    healthcheck:
+      test: redis-cli PING || exit 1
+      interval: 1m
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      - redis-master
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+    networks:
+      - iot
+  redis-slave-2:
+    build:
+      context: .
+      dockerfile: redis-dockerfile.yml
+    healthcheck:
+      test: redis-cli PING || exit 1
+      interval: 1m
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      - redis-master
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+    networks:
+      - iot
+networks:
+  iot:
