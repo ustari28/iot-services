@@ -7,3 +7,17 @@ Simple rabbit node and Redis cluster. Rabbit with mqtt plugin enabled for test e
 
 - guest/guest: default user/password for rabbitmq
 - redis-cluster without security
+
+## Start up
+- Normal start up
+```sh
+docker-compose -f rabbitmq-redis-dc.yml up -d
+```
+- Stop
+```sh
+docker-compose -f rabbitmq-redis-dc.yml down
+```
+- Start & rebuild
+```sh
+docker-compose -f rabbitmq-redis-dc.yml up -d --build
+```
